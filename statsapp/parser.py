@@ -49,36 +49,3 @@ def load_file(filename, max_lines=None):
             data['message'].append(message)
     # Return data frame
     return pandas.DataFrame(data)
-
-def plot_messages(df):
-    """"""
-    counts = {}
-    senders = []
-    for row in df.itertuples(index=False):
-        date = row.timestamp.date()
-        if date not in counts:
-            counts[date] = {}
-        if row.sender not in counts[date]:
-            counts[date][row.sender] = 0
-        counts[date][row.sender] += 1
-        # Collect senders
-        if row.sender not in senders:
-            senders.append(row.sender)
-    # print(counts)
-    # print(senders)
-
-    dates = list(counts.keys())
-    values = [[] for sender in senders]
-    for date in dates:
-        for idx, sender in enumerate(senders):
-            values[idx].append(counts[date].get(sender, 0))
-    # print(values)
-
-    # Plot
-    fig, ax = plt.subplots()
-    previous_values = None
-    for idx, sender in enumerate(senders):
-        bottom = values[idx-1] if idx > 0 else None
-        ax.bar(dates, values[idx], bottom=bottom, label=sender)
-    ax.legend()
-    plt.show()
